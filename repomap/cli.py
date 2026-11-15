@@ -56,6 +56,15 @@ def main() -> None:
             ignore_dirs=set(args.ignore),
         )
 
+        # Exclude the output file from the generated directory tree.
+        if args.output is not None:
+            output_path = args.output.resolve()
+
+            files = [
+                file for file in files
+                if file.resolve() != output_path
+            ]
+
         print(f"\nRepoMap scanned: {root.resolve()}")
         print(f"Total files found: {len(files)}\n")
 

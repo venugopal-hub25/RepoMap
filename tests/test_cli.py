@@ -173,5 +173,35 @@ class TestCLI(unittest.TestCase):
             )
             self.assertIn("--force", error_output.getvalue())
 
+    def test_excludes_output_file_from_exported_tree(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "project"
+            root.mkdir()
+
+            (root / "main.py").touch()
+
+            output_path = root / "structure.txt"
+            output_path.write_text(
+                "Previous content",
+                encoding="utf-8",
+            )
+
+            arguments = [
+                "repomap",
+                str(root),
+                "--output",
+                str(output_path),
+                "--force",
+            ]
+
+            with patch("sys.argv", arguments):
+                with redirect_stdout(io.StringIO()):
+                    main()
+
+            exported_tree = output_path.read_text(encoding="utf-8")
+
+            self.assertIn("main.py", exported_tree)
+            self.assertNotIn("structure.txt", exported_tree)
+
 if __name__ == "__main__":
     unittest.main()
