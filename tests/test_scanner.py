@@ -100,5 +100,50 @@ class TestScanner(unittest.TestCase):
             self.assertIn("app.py", names)
             self.assertNotIn("deep.py", names)
 
+    def test_rejects_zero_max_depth(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+
+            with self.assertRaises(ValueError):
+                scan_directory(root, max_depth=0)
+
+    def test_rejects_negative_max_depth(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+
+            with self.assertRaises(ValueError):
+                scan_directory(root, max_depth=-1)
+
+    def test_raises_error_for_nonexistent_directory(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "missing"
+
+            with self.assertRaises(FileNotFoundError):
+                scan_directory(root)
+
+    def test_raises_error_for_file_instead_of_directory(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            file_path = root / "README.md"
+            file_path.touch()
+
+            with self.assertRaises(NotADirectoryError):
+                scan_directory(file_path)
+
+    def test_ignores_egg_info_directory(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+
+            (root / "main.py").touch()
+            egg_info = root / "sample.egg-info"
+            egg_info.mkdir()
+            (egg_info / "PKG-INFO").touch()
+
+            files = scan_directory(root)
+            names = {file.name for file in files}
+
+            self.assertIn("main.py", names)
+            self.assertNotIn("PKG-INFO", names)
+
 if __name__ == "__main__":
     unittest.main()

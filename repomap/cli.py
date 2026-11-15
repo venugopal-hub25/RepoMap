@@ -5,7 +5,8 @@ from pathlib import Path
 from repomap.scanner import scan_directory
 from repomap.tree import render_tree
 
-def main():
+
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="RepoMap - Understand your codebase structure."
     )
@@ -14,18 +15,17 @@ def main():
         "path",
         nargs="?",
         default=".",
-        help="Path to the repository to scan."
+        help="Path to the repository to scan.",
     )
 
     parser.add_argument(
-    "--max-depth",
-    type=int,
-    default=None,
-    help="Maximum directory depth to scan."
+        "--max-depth",
+        type=int,
+        default=None,
+        help="Maximum directory depth to scan.",
     )
 
     args = parser.parse_args()
-
     root = Path(args.path)
 
     try:
@@ -33,10 +33,9 @@ def main():
 
         print(f"\nRepoMap scanned: {root.resolve()}")
         print(f"Total files found: {len(files)}\n")
-
         print(render_tree(root, files))
 
-    except (FileNotFoundError, NotADirectoryError) as error:
+    except (FileNotFoundError, NotADirectoryError, ValueError) as error:
         parser.error(str(error))
 
 
