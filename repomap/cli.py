@@ -58,7 +58,7 @@ def main() -> None:
         if args.output is not None:
             save_tree(tree, args.output)
             print(f"\nDirectory tree saved to: {args.output}")
-    except (FileNotFoundError, NotADirectoryError, ValueError) as error:
+    except (OSError, ValueError) as error:
         parser.error(str(error))
 
 
