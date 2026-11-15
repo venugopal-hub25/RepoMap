@@ -3,7 +3,7 @@ import argparse
 from pathlib import Path
 
 from repomap.scanner import scan_directory
-
+from repomap.tree import render_tree
 
 def main():
     parser = argparse.ArgumentParser(
@@ -27,8 +27,7 @@ def main():
         print(f"\nRepoMap scanned: {root.resolve()}")
         print(f"Total files found: {len(files)}\n")
 
-        for file in files:
-            print(file.relative_to(root.resolve()))
+        print(render_tree(root, files))
 
     except (FileNotFoundError, NotADirectoryError) as error:
         parser.error(str(error))
