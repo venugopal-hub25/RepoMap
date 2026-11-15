@@ -2,39 +2,37 @@
 
 **Understand your codebase structure.**
 
-RepoMap is a lightweight Python command-line tool that scans a repository and displays its directory structure as a readable tree.
+RepoMap is a lightweight Python command-line tool that scans a project directory and visualizes its structure as a readable directory tree.
 
-It helps developers quickly understand how files and folders are organised inside a project.
+It helps developers quickly explore unfamiliar codebases, understand how files and folders are organized, and identify the overall project layout.
 
 ## Features
 
-- Recursively scans project directories.
-- Displays files in a visual directory-tree format.
-- Ignores common unnecessary directories such as `.git`, `.venv`, `venv`, `__pycache__`, and `node_modules`.
-- Excludes `.env` files.
-- Skips symbolic links.
-- Supports scanning a specified directory.
-- Includes automated unit tests.
+- **Recursive directory scanning** — explores project directories and their files.
+- **Visual directory tree** — displays the project structure in a clean, readable format.
+- **Smart directory filtering** — ignores common directories such as `.git`, `.venv`, `venv`, `__pycache__`, and `node_modules`.
+- **Environment file protection** — excludes `.env` and `.env.*` files from scan results.
+- **Symbolic link handling** — skips symbolic links.
+- **Custom scan path** — scan the current directory or specify another project directory.
+- **Depth control** — limit how deep RepoMap scans into a directory structure.
+- **Automated tests** — includes unit tests for scanning and tree rendering.
 
-## Project Structure
+## Example Output
 
 ```text
-RepoMap/
-├── repomap/
-│   ├── __init__.py
-│   ├── __main__.py
-│   ├── cli.py
-│   ├── scanner.py
-│   └── tree.py
-└── tests/
-    ├── test_scanner.py
-    └── test_tree.py
+my-project/
+├── src/
+│   ├── main.py
+│   └── utils.py
+├── tests/
+│   └── test_main.py
+└── README.md
 ```
 
 ## Requirements
 
-- Python 3.9 or later
-- Git (for cloning the repository)
+- Python 3.10 or later
+- Git
 
 ## Installation
 
@@ -44,7 +42,7 @@ Clone the repository:
 git clone https://github.com/venugopal-hub25/RepoMap.git
 ```
 
-Navigate into the project:
+Navigate into the project directory:
 
 ```bash
 cd RepoMap
@@ -62,47 +60,73 @@ Activate it on Linux:
 source .venv/bin/activate
 ```
 
+Install RepoMap in editable mode:
+
+```bash
+python -m pip install -e .
+```
+
 ## Usage
 
-Run RepoMap from the project directory:
+### Scan the current directory
+
+```bash
+repomap
+```
+
+You can also run it as a Python module:
 
 ```bash
 python -m repomap
 ```
 
-Scan a specific directory:
+### Scan a specific directory
 
 ```bash
-python -m repomap /path/to/project
+repomap /path/to/project
 ```
 
-Display available command-line options:
+### Limit directory depth
+
+Use `--max-depth` to control how deeply RepoMap scans.
 
 ```bash
-python -m repomap --help
+repomap . --max-depth 2
 ```
 
-## Example Output
+### Display available options
+
+```bash
+repomap --help
+```
+
+## Project Structure
 
 ```text
-my-project/
-├── src/
-│   ├── main.py
-│   └── utils.py
+RepoMap/
+├── repomap/
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── cli.py
+│   ├── scanner.py
+│   └── tree.py
 ├── tests/
-│   └── test_main.py
-└── README.md
+│   ├── test_scanner.py
+│   └── test_tree.py
+├── README.md
+├── .gitignore
+└── pyproject.toml
 ```
 
 ## Running Tests
 
-Run the automated test suite:
+Run the unit test suite from the project root:
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-The current test suite contains six tests covering directory scanning, ignored files, symbolic links, and tree rendering.
+The current test suite includes tests for directory scanning, ignored files and directories, symbolic links, maximum scan depth, and tree rendering.
 
 ## Technologies Used
 
@@ -115,7 +139,9 @@ The current test suite contains six tests covering directory scanning, ignored f
 
 ## Project Status
 
-RepoMap is an actively developed project. Core directory scanning, tree rendering, CLI integration, and initial automated tests are implemented.
+RepoMap is actively under development. Its core directory scanning, tree rendering, command-line interface, package configuration, depth control, and initial automated tests are implemented.
+
+More improvements and features are planned.
 
 ## Author
 
