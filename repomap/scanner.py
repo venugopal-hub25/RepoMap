@@ -12,7 +12,7 @@ IGNORED_DIRS = {
 }
 
 
-def scan_directory(root: Path) -> list[Path]:
+def scan_directory(root: Path, max_depth: int | None = None) -> list[Path]:
     """Scan a directory and return its files, excluding ignored folders."""
 
     root = root.resolve()
@@ -26,6 +26,11 @@ def scan_directory(root: Path) -> list[Path]:
     files = []
 
     for current_dir, dirnames, filenames in os.walk(root):
+        current_path = Path(current_dir)
+        current_depth = len(current_path.relative_to(root).parts)
+
+        if max_depth is not None and current_depth >= max_depth - 1:
+            dirnames.clear()
         dirnames[:] = sorted(
             name for name in dirnames
             if name not in IGNORED_DIRS and not name.startswith(".")

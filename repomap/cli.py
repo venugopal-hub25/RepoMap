@@ -17,12 +17,19 @@ def main():
         help="Path to the repository to scan."
     )
 
+    parser.add_argument(
+    "--max-depth",
+    type=int,
+    default=None,
+    help="Maximum directory depth to scan."
+    )
+
     args = parser.parse_args()
 
     root = Path(args.path)
 
     try:
-        files = scan_directory(root)
+        files = scan_directory(root, max_depth=args.max_depth)
 
         print(f"\nRepoMap scanned: {root.resolve()}")
         print(f"Total files found: {len(files)}\n")

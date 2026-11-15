@@ -69,5 +69,36 @@ class TestScanner(unittest.TestCase):
             self.assertIn("target.py", names)
             self.assertNotIn("linked.py", names)
 
+    def test_max_depth_one(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+
+            (root / "main.py").touch()
+            (root / "src").mkdir()
+            (root / "src" / "app.py").touch()
+
+            files = scan_directory(root, max_depth=1)
+            names = {file.name for file in files}
+
+            self.assertIn("main.py", names)
+            self.assertNotIn("app.py", names)
+
+    def test_max_depth_two(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+
+            (root / "main.py").touch()
+            (root / "src").mkdir()
+            (root / "src" / "app.py").touch()
+            (root / "src" / "nested").mkdir()
+            (root / "src" / "nested" / "deep.py").touch()
+
+            files = scan_directory(root, max_depth=2)
+            names = {file.name for file in files}
+
+            self.assertIn("main.py", names)
+            self.assertIn("app.py", names)
+            self.assertNotIn("deep.py", names)
+
 if __name__ == "__main__":
     unittest.main()
