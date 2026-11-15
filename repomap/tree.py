@@ -36,3 +36,8 @@ def render_tree(root: Path, files: list[Path]) -> str:
     draw_branch(tree)
 
     return "\n".join(lines)
+
+def save_tree(tree: str, output_path: Path) -> None:
+    """Save the rendered directory tree to a text file."""
+
+    output_path.write_text(tree, encoding="utf-8")

@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from repomap.tree import render_tree
+from repomap.tree import render_tree, save_tree
 
 
 class TestTreeRenderer(unittest.TestCase):
@@ -36,6 +36,30 @@ class TestTreeRenderer(unittest.TestCase):
 
             self.assertEqual(result, f"{root.name}/")
 
+    def test_saves_tree_to_file(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
 
+            output_file = root / "structure.txt"
+            tree = "my-project/\n├── main.py"
+
+            save_tree(tree, output_file)
+
+            saved_content = output_file.read_text(encoding="utf-8")
+
+            self.assertEqual(saved_content, tree)
+
+    def test_saves_unicode_tree_correctly(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            output_file = root / "tree.txt"
+
+            tree = "RepoMap/\n└── main.py"
+
+            save_tree(tree, output_file)
+
+            saved_content = output_file.read_text(encoding="utf-8")
+
+            self.assertEqual(saved_content, tree)
 if __name__ == "__main__":
     unittest.main()

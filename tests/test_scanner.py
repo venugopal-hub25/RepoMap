@@ -145,5 +145,40 @@ class TestScanner(unittest.TestCase):
             self.assertIn("main.py", names)
             self.assertNotIn("PKG-INFO", names)
 
+    def test_ignores_custom_directory(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+
+            (root / "main.py").touch()
+            (root / "build").mkdir()
+            (root / "build" / "output.py").touch()
+
+            files = scan_directory(root, ignore_dirs={"build"})
+            names = {file.name for file in files}
+
+            self.assertIn("main.py", names)
+            self.assertNotIn("output.py", names)
+
+    def test_ignores_multiple_custom_directories(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+
+            (root / "main.py").touch()
+
+            for directory in ("build", "dist", "logs"):
+                folder = root / directory
+                folder.mkdir()
+                (folder / "ignored.py").touch()
+
+            files = scan_directory(
+                root,
+                ignore_dirs={"build", "dist", "logs"},
+            )
+
+            names = {file.name for file in files}
+
+            self.assertIn("main.py", names)
+            self.assertNotIn("ignored.py", names)
+
 if __name__ == "__main__":
     unittest.main()

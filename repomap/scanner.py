@@ -12,10 +12,16 @@ IGNORED_DIRS = {
 }
 
 
-def scan_directory(root: Path, max_depth: int | None = None) -> list[Path]:
+def scan_directory(
+    root: Path,
+    max_depth: int | None = None,
+    ignore_dirs: set[str] | None = None,
+) -> list[Path]:
     """Scan a directory and return its files, excluding ignored folders."""
     if max_depth is not None and max_depth < 1:
         raise ValueError("max_depth must be a positive integer.")
+    custom_ignored_dirs = ignore_dirs or set()
+    ignored_dirs = IGNORED_DIRS | custom_ignored_dirs
 
     root = root.resolve()
 
@@ -36,7 +42,7 @@ def scan_directory(root: Path, max_depth: int | None = None) -> list[Path]:
         dirnames[:] = sorted(
             name for name in dirnames
             if (
-                name not in IGNORED_DIRS
+                name not in ignored_dirs
                 and not name.startswith(".")
                 and not name.endswith(".egg-info")
             )

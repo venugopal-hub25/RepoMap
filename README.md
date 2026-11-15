@@ -10,12 +10,14 @@ It helps developers quickly explore unfamiliar codebases, understand how files a
 
 - **Recursive directory scanning** — explores project directories and their files.
 - **Visual directory tree** — displays the project structure in a clean, readable format.
-- **Smart directory filtering** — ignores common directories such as `.git`, `.venv`, `venv`, `__pycache__`, and `node_modules`.
+- **Smart directory filtering** — ignores common directories such as `.git`, `.venv`, `venv`, `__pycache__`, `node_modules`, and Python `.egg-info` metadata directories.
 - **Environment file protection** — excludes `.env` and `.env.*` files from scan results.
 - **Symbolic link handling** — skips symbolic links.
 - **Custom scan path** — scan the current directory or specify another project directory.
-- **Depth control** — limit how deep RepoMap scans into a directory structure.
-- **Automated tests** — includes unit tests for scanning and tree rendering.
+- **Depth control** — limit how deeply RepoMap scans into a directory structure.
+- **Custom exclusions** — specify additional directory names to ignore.
+- **Tree export** — save the generated directory tree to a UTF-8 text file.
+- **Automated tests** — includes tests for scanning, filtering, tree rendering, and exporting.
 
 ## Example Output
 
@@ -68,25 +70,25 @@ python -m pip install -e .
 
 ## Usage
 
-### Scan the current directory
+### 1. Scan the current directory
 
 ```bash
 repomap
 ```
 
-You can also run it as a Python module:
+You can also run RepoMap as a Python module:
 
 ```bash
 python -m repomap
 ```
 
-### Scan a specific directory
+### 2. Scan a specific directory
 
 ```bash
 repomap /path/to/project
 ```
 
-### Limit directory depth
+### 3. Limit directory depth
 
 Use `--max-depth` to control how deeply RepoMap scans.
 
@@ -94,7 +96,35 @@ Use `--max-depth` to control how deeply RepoMap scans.
 repomap . --max-depth 2
 ```
 
-### Display available options
+### 4. Export the directory tree
+
+Use `--output` to save the generated directory tree to a text file.
+
+```bash
+repomap . --output structure.txt
+```
+
+The tree is displayed in the terminal and saved to the specified file.
+
+### 5. Ignore additional directories
+
+Use `--ignore` followed by one or more directory names.
+
+```bash
+repomap . --ignore build dist logs
+```
+
+Custom exclusions are added to RepoMap's built-in ignored directories.
+
+### 6. Combine multiple options
+
+RepoMap allows multiple options to be used together.
+
+```bash
+repomap . --max-depth 2 --ignore build dist --output structure.txt
+```
+
+### 7. Display available options
 
 ```bash
 repomap --help
@@ -120,13 +150,13 @@ RepoMap/
 
 ## Running Tests
 
-Run the unit test suite from the project root:
+Run the automated test suite from the project root:
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-The current test suite includes tests for directory scanning, ignored files and directories, symbolic links, maximum scan depth, and tree rendering.
+The test suite covers directory scanning, built-in and custom exclusions, environment files, symbolic links, maximum scan depth, invalid paths, tree rendering, and UTF-8 text export.
 
 ## Technologies Used
 
@@ -139,7 +169,7 @@ The current test suite includes tests for directory scanning, ignored files and 
 
 ## Project Status
 
-RepoMap is actively under development. Its core directory scanning, tree rendering, command-line interface, package configuration, depth control, and initial automated tests are implemented.
+RepoMap is actively under development. Its core directory scanning, tree rendering, command-line interface, package configuration, depth control, custom directory exclusions, text-file export, and automated tests are implemented.
 
 More improvements and features are planned.
 
