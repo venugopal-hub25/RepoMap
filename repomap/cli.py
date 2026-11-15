@@ -33,6 +33,12 @@ def main() -> None:
     )
 
     parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Overwrite the output file if it already exists.",
+    )
+
+    parser.add_argument(
         "--ignore",
         nargs="+",
         default=[],
@@ -48,16 +54,24 @@ def main() -> None:
             root,
             max_depth=args.max_depth,
             ignore_dirs=set(args.ignore),
-)
+        )
 
         print(f"\nRepoMap scanned: {root.resolve()}")
         print(f"Total files found: {len(files)}\n")
+
         tree = render_tree(root, files)
         print(tree)
 
         if args.output is not None:
+            if args.output.is_file() and not args.force:
+                raise FileExistsError(
+                    f"Output file already exists: {args.output}. "
+                    "Use --force to overwrite."
+                )
+
             save_tree(tree, args.output)
             print(f"\nDirectory tree saved to: {args.output}")
+
     except (OSError, ValueError) as error:
         parser.error(str(error))
 

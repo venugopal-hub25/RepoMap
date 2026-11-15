@@ -17,7 +17,8 @@ It helps developers quickly explore unfamiliar codebases, understand how files a
 - **Depth control** — limit how deeply RepoMap scans into a directory structure.
 - **Custom exclusions** — specify additional directory names to ignore.
 - **Tree export** — save the generated directory tree to a UTF-8 text file.
-- **Automated tests** — includes tests for scanning, filtering, tree rendering, and exporting.
+- **Safe file export** — prevents accidental overwriting of existing files; supports explicit overwriting with `--force`.
+- **Automated testing** — includes tests for scanning, filtering, tree rendering, exporting, and CLI error handling.
 
 ## Example Output
 
@@ -106,7 +107,17 @@ repomap . --output structure.txt
 
 The tree is displayed in the terminal and saved to the specified file.
 
-### 5. Ignore additional directories
+### 5. Force overwrite an existing file
+
+By default, RepoMap refuses to overwrite an existing output file.
+
+Use `--force` when you explicitly want to replace an existing file.
+
+```bash
+repomap . --output structure.txt --force
+```
+
+### 6. Ignore additional directories
 
 Use `--ignore` followed by one or more directory names.
 
@@ -116,7 +127,7 @@ repomap . --ignore build dist logs
 
 Custom exclusions are added to RepoMap's built-in ignored directories.
 
-### 6. Combine multiple options
+### 7. Combine multiple options
 
 RepoMap allows multiple options to be used together.
 
@@ -124,7 +135,13 @@ RepoMap allows multiple options to be used together.
 repomap . --max-depth 2 --ignore build dist --output structure.txt
 ```
 
-### 7. Display available options
+To allow overwriting an existing output file, add `--force`:
+
+```bash
+repomap . --max-depth 2 --ignore build dist --output structure.txt --force
+```
+
+### 8. Display available options
 
 ```bash
 repomap --help
@@ -141,6 +158,7 @@ RepoMap/
 │   ├── scanner.py
 │   └── tree.py
 ├── tests/
+│   ├── test_cli.py
 │   ├── test_scanner.py
 │   └── test_tree.py
 ├── README.md
@@ -156,7 +174,18 @@ Run the automated test suite from the project root:
 python -m unittest discover -s tests -v
 ```
 
-The test suite covers directory scanning, built-in and custom exclusions, environment files, symbolic links, maximum scan depth, invalid paths, tree rendering, and UTF-8 text export.
+The test suite covers:
+
+- Directory scanning and tree rendering.
+- Built-in and custom directory exclusions.
+- Environment file filtering.
+- Symbolic link handling.
+- Maximum scan depth and invalid depth values.
+- Invalid directory paths.
+- UTF-8 text export.
+- Export permission and destination errors.
+- Protection against accidental file overwriting.
+- Explicit overwriting using `--force`.
 
 ## Technologies Used
 
@@ -169,7 +198,7 @@ The test suite covers directory scanning, built-in and custom exclusions, enviro
 
 ## Project Status
 
-RepoMap is actively under development. Its core directory scanning, tree rendering, command-line interface, package configuration, depth control, custom directory exclusions, text-file export, and automated tests are implemented.
+RepoMap is actively under development. Its core directory scanning, tree rendering, command-line interface, package configuration, depth control, custom directory exclusions, text-file export, overwrite protection, and automated tests are implemented.
 
 More improvements and features are planned.
 
